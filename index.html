@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرسیاری دینی</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ستایلە گشتییەکان */
+        :root {
+            --primary-color: #1976D2; /* شینی تۆخ */
+            --secondary-color: #64B5F6; /* شینی کاڵ */
+            --success-color: #388E3C; /* سەوزی سەرکەوتوو */
+            --error-color: #D32F2F; /* سووری هەڵە */
+            --background-color: #E3F2FD; /* شینی کاڵی پاشبنەما */
+            --text-color: #212121; /* ڕەنگی نووسینی تاریک */
+            --border-radius: 0.5rem;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease-in-out;
+        }
+
+        body {
+            font-family: 'Noto Naskh Arabic', serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ستایلەکانی بەشی سەرەوە (header) */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        /* ستایلەکانی ناوەڕۆک */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            flex: 1;
+        }
+
+        /* ستایلەکانی لیست */
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+            padding: 1.5rem 0;
+        }
+
+        /* ستایلەکانی دوگمە */
+        .btn {
+            display: block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            outline: none;
+            border: 2px solid transparent;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow);
+        }
+
+        .btn:focus {
+            border-color: var(--secondary-color);
+        }
+
+        /* ستایلەکانی کات */
+        .timer {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--error-color);
+            text-align: center;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            background: #FFCDD2; /* سووری کاڵ */
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        /* ستایلەکانی پرسیار */
+        .question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 1.25rem 0;
+            text-align: center;
+            color: var(--text-color);
+            position: relative;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 1;
+        }
+
+        .question.fade-out {
+            opacity: 0;
+        }
+
+        /* ستایلەکانی بژاردەکان */
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 1.25rem 0;
+        }
+
+        .options li {
+            background: #fff;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid #B2EBF2; /* شینی کاڵ */
+        }
+
+        .options li:hover {
+            background: #E1F5FE; /* شینی کاڵتر */
+            transform: translateX(-4px);
+            border-color: var(--primary-color);
+        }
+
+        .options input[type="radio"] {
+            width: 1rem;
+            height: 1rem;
+            accent-color: var(--primary-color);
+        }
+
+        /* ستایلەکانی پێشکەوتن */
+        .progress {
+            font-size: 1rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* ستایلەکانی ئەنجام */
+        .result {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .result h2 {
+            color: var(--success-color);
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .result p {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin: 1.25rem 0;
+            font-weight: 500;
+        }
+
+        /* ئەنیمەیشنەکان */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(5px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s ease-in-out forwards;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* ستایلەکان بۆ گونجاندن لەگەڵ قەبارەی شاشەکان */
+        @media (max-width: 768px) {
+            .container {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .question {
+                font-size: 1.1rem;
+                margin: 1rem 0;
+            }
+
+            .options li {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                font-size: 0.85rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        /* ستایلەکانی بەشی خوارەوە (footer) */
+        footer {
+            text-align: center;
+            padding: 0.5rem;
+            background-color: #B2EBF2; /* شینی کاڵ */
+            color: var(--text-color);
+            font-size: 0.7rem;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>پرسیار و وەڵامە ئاینییەکان</h1>
+    </header>
+    <div class="container">
+        <div id="menu" class="menu">
+            <button class="btn" onclick="دەستپێکردنی_ئەزموون(10, 10)">١٠ پرسیار</button>
+            <button class="btn" onclick="دەستپێکردنی_ئەزموون(33, 3.03)">٣٣ پرسیار</button>
+            <button class="btn" onclick="دەستپێکردنی_ئەزموون(50, 2)">٥٠ پرسیار</button>
+        </div>
+        <div id="quiz" style="display: none;">
+            <div class="progress" id="progress"></div>
+            <div class="timer" id="timer">١٠ چرکە ماوە</div>
+            <div class="question" id="question">پرسیاری یەکەم</div>
+            <ul class="options" id="options">
+                <!-- بژاردەکان لێرە دادەنرێن -->
+            </ul>
+            <button class="btn" id="next">دواتر</button>
+        </div>
+        <div id="result" style="display: none; text-align: center;">
+            <h2>ئەنجامەکان</h2>
+            <p id="score"></p>
+            <a href="#" class="btn" id="restart">دووبارەی بکەوە</a>
+        </div>
+    </div>
+    <footer>
+        © 2024 
+    </footer>
+    <script>
+        const questions = [
+            { 
+                question: 'کاتێک ڕۆژان لە ئیسلامدا دەستپێ دەکات؟',
+                options: ['ئێوارە', 'ئەوەیلە', 'پاشنێور', 'چوارنیشت'],
+                answer: 1
+            },
+            {
+                question: 'چەند نوێژی فەرز هەیە لە ڕۆژێکدا؟',
+                options: ['٣ نوێژ', '٤ نوێژ', '٥ نوێژ', '٦ نوێژ'],
+                answer: 2
+            },
+            {
+                question: 'پێش نوێژکردن چی پێویستە؟',
+                options: ['خواردن', 'دەستنوێژ', 'قسەکردن', 'خەوتن'],
+                answer: 1
+            },
+            {
+                question: 'کام مانگ مانگی ڕۆژووە؟',
+                options: ['شەعبان', 'ڕەمەزان', 'شەوال', 'ڕەجەب'],
+                answer: 1
+            },
+            {
+                question: 'سوننەتە پێش خواردن چی بڵێین؟',
+                options: ['سوپاس', 'بسم الله', 'ئەلحەمدولیلا', 'سڵاو'],
+                answer: 1
+            },
+            {
+                question: 'کاتێک کەسێک دەبینین چی دەڵێین؟',
+                options: ['خواحافیز', 'سڵاو علیکم', 'بەیانی باش', 'شەو باش'],
+                answer: 1
+            },
+            {
+                question: 'چەند ڕەکعەت نوێژی بەیانی هەیە؟',
+                options: ['٢ ڕەکعەت', '٣ ڕەکعەت', '٤ ڕەکعەت', '٥ ڕەکعەت'],
+                answer: 0
+            },
+            {
+                question: 'کام لایەن ڕوو دەکەینە کاتی نوێژ؟',
+                options: ['باکوور', 'باشوور', 'ڕۆژهەڵات', 'قیبلە'],
+                answer: 3
+            },
+            {
+                question: 'زەکات لە چەند لە سەدی ماڵە؟',
+                options: ['٢.٥٪', '٥٪', '١٠٪', '٢٠٪'],
+                answer: 0
+            },
+            {
+                question: 'کام یەک لە ئەرکانی ئیسلام نییە؟',
+                options: ['نوێژ', 'ڕۆژوو', 'زەکات', 'خەوتن'],
+                answer: 3
+            },
+            {
+                question: 'چەند جار دەستنوێژ دەشکێت بە پێکەنین؟',
+                options: ['یەک جار', 'دوو جار', 'سێ جار', 'ناشکێت'],
+                answer: 3
+            },
+            {
+                question: 'کام یەکە لە خواردنەکان حەرامە؟',
+                options: ['گۆشتی مەڕ', 'گۆشتی بەراز', 'گۆشتی مریشک', 'ماسی'],
+                answer: 1
+            },
+            {
+                question: 'مزگەوت چی تێدا دەکرێت؟',
+                options: ['یاری', 'نوێژ', 'خەوتن', 'خواردن'],
+                answer: 1
+            },
+            {
+                question: 'کێ یەکەم موسوڵمان بوو؟',
+                options: ['عومەر', 'عوسمان', 'خەدیجە', 'عەلی'],
+                answer: 2
+            },
+            {
+                question: 'قورئان بە چ زمانێک دابەزیوە؟',
+                options: ['کوردی', 'فارسی', 'عەرەبی', 'تورکی'],
+                answer: 2
+            },
+            {
+                question: 'کام مانگ حەج تێدا دەکرێت؟',
+                options: ['ڕەمەزان', 'شەوال', 'زولحەججە', 'موحەڕەم'],
+                answer: 2
+            },
+            {
+                question: 'چەند جۆرە ڕۆژوو هەیە؟',
+                options: ['یەک', 'دوو', 'سێ', 'چوار'],
+                answer: 1
+            },
+            {
+                question: 'نوێژی هەینی چەند ڕەکعەتە؟',
+                options: ['دوو', 'سێ', 'چوار', 'پێنج'],
+                answer: 0
+            },
+            {
+                question: 'سیواک بۆ چی بەکاردێت؟',
+                options: ['خواردن', 'پاککردنەوەی ددان', 'نووستن', 'یاریکردن'],
+                answer: 1
+            },
+            {
+                question: 'کام یەک لە ئادابی خواردنە؟',
+                options: ['بە پێوە خواردن', 'بە دەستی چەپ', 'بە دەستی ڕاست', 'بە پاڵکەوتن'],
+                answer: 2
+            },
+            {
+                question: 'چەند سوجدە هەیە لە نوێژی عەسردا؟',
+                options: ['٢', '٤', '٦', '٨'],
+                answer: 1
+            },
+            {
+                question: 'کام شەو باشترینە بۆ دوعاکردن؟',
+                options: ['شەوی هەینی', 'شەوی شەممە', 'شەوی یەک شەممە', 'شەوی دوو شەممە'],
+                answer: 0
+            },
+            {
+                question: 'کام مانگ موسوڵمانان تێیدا سەرکەوتن لە غەزای بەدر؟',
+                options: ['ڕەمەزان', 'شەعبان', 'ڕەجەب', 'شەوال'],
+                answer: 0
+            },
+            {
+                question: 'چەند ڕکات نوێژی تەراویح هەیە؟',
+                options: ['٨ ڕکات', '١١ ڕکات', '٢٠ ڕکات', '٢٣ ڕکات'],
+                answer: 2
+            },
+            {
+                question: 'کام یەک لە مەرجەکانی نوێژە؟',
+                options: ['جلی جوان', 'دەستنوێژ', 'بۆنی خۆش', 'قژی درێژ'],
+                answer: 1
+            },
+            {
+                question: 'چەند سورەت هەیە لە قورئاندا؟',
+                options: ['١١٤', '١١٥', '١١٦', '١١٧'],
+                answer: 0
+            },
+            {
+                question: 'کام یەکە لە نیشانەکانی قیامەت نییە؟',
+                options: ['دەرچوونی دەججال', 'هاتنی عیسا', 'باران بارین', 'دەرچوونی یەئجوج و مەئجوج'],
+                answer: 2
+            },
+            {
+                question: 'کام یەک لە مەرجەکانی ڕۆژووە؟',
+                options: ['دەوڵەمەند بوون', 'تەندروست بوون', 'خوێندەوار بوون', 'جوان بوون'],
+                answer: 1
+            },
+            {
+                question: 'کام کاتە باشترین کات بۆ دوعاکردن لە ڕۆژوودا؟',
+                options: ['بەیانی', 'نیوەڕۆ', 'عەسر', 'کاتی بانگی مەغریب'],
+                answer: 3
+            },
+            {
+                question: 'چەند ڕۆژ واجبە ڕۆژوو گرتن لە مانگی ڕەمەزاندا؟',
+                options: ['٢٨ ڕۆژ', '٢٩ یان ٣٠ ڕۆژ', '٣١ ڕۆژ', '٣٢ ڕۆژ'],
+                answer: 1
+            },
+            {
+                question: 'کام یەک لە ئەرکانی نوێژە؟',
+                options: ['خوێندنەوەی قورئان', 'سوجدە', 'تەحیات', 'هەموویان'],
+                answer: 3
+            },
+            {
+                question: 'چەند جار دەبێت تەواف بکرێت لە حەجدا؟',
+                options: ['٥ جار', '٦ جار', '٧ جار', '٨ جار'],
+                answer: 2
+            },
+            {
+                question: 'کێ یەکەم کەس بوو بانگی دا لە ئیسلامدا؟',
+                options: ['بیلال', 'عومەر', 'عەلی', 'عوسمان'],
+                answer: 0
+            },
+            {
+                question: 'کام یەک لە مەرجەکانی زەکاتە؟',
+                options: ['خوێندەوار بوون', 'دەوڵەمەند بوون', 'بەهێز بوون', 'جوان بوون'],
+                answer: 1
+            },
+            {
+                question: 'چەند ڕۆژ دەبێت قوربانی بکرێت لە جەژنی قورباندا؟',
+                options: ['١ ڕۆژ', '٢ ڕۆژ', '٣ ڕۆژ', '٤ ڕۆژ'],
+                answer: 2
+            },
+            {
+                question: 'کام شوێن پیرۆزترینە لە ئیسلامدا؟',
+                options: ['مەدینە', 'قودس', 'مەککە', 'تائیف'],
+                answer: 2
+            },
+            {
+                question: 'چەند جۆر تەیەمموم هەیە؟',
+                options: ['یەک', 'دوو', 'سێ', 'چوار'],
+                answer: 0
+            },
+            {
+                question: 'کام یەک لە مەرجەکانی تەواف نییە؟',
+                options: ['دەستنوێژ', 'داپۆشینی عەورەت', 'پێخاوس بوون', 'بەدەوری کەعبەدا'],
+                answer: 2
+            },
+            {
+                question: 'چەند جۆر سەدەقە هەیە؟',
+                options: ['یەک', 'دوو', 'سێ', 'چوار'],
+                answer: 1
+            },
+            {
+                question: 'کام یەک لە مەرجەکانی نیکاح نییە؟',
+                options: ['شایەت', 'مەهر', 'ڕەزامەندی', 'دەوڵەمەند بوون'],
+                answer: 3
+            },
+            {
+                question: 'چەند جۆر تەڵاق هەیە؟',
+                options: ['یەک', 'دوو', 'سێ', 'چوار'],
+                answer: 2
+            },
+            {
+                question: 'کام یەک لە مەرجەکانی عیددە نییە؟',
+                options: ['ژن بوون', 'موسوڵمان بوون', 'عاقڵ بوون', 'دەوڵەمەند بوون'],
+                answer: 3
+            }
+        ];
+
+        let پرسیاری_ئێستا = 0;
+        let خاڵ = 0;
+        let timer;
+        let پرسیارە_هەڵبژێردراوەکان = [];
+        let خاڵ_بۆ_هەر_پرسیارێک = 0;
+
+        function دەستپێکردنی_ئەزموون(ژمارەی_پرسیارەکان, خاڵ) {
+            خاڵ_بۆ_هەر_پرسیارێک = خاڵ;
+            پرسیارە_هەڵبژێردراوەکان = questions.sort(() => 0.5 - Math.random()).slice(0, ژمارەی_پرسیارەکان);
+
+            const بەشی_سەرەکی = document.getElementById('menu');
+            const بەشی_ئەزموون = document.getElementById('quiz');
+
+            بەشی_سەرەکی.classList.add('fade-out');
+
+            setTimeout(() => {
+                بەشی_سەرەکی.style.display = 'none';
+                بەشی_ئەزموون.style.display = 'block';
+                بەشی_ئەزموون.classList.add('fade-in');
+
+                پرسیاری_ئێستا = 0;
+                خاڵ = 0;
+                پیشاندانی_پرسیار();
+                دەستپێکردنی_کات();
+            }, 300);
+        }
+
+        function دەستپێکردنی_کات() {
+            let کات_ماوە = 10;
+            const کات_نیشاندەر = document.getElementById('timer');
+            کات_نیشاندەر.textContent = `${کات_ماوە} چرکە ماوە`;
+
+            clearInterval(timer); // پاککردنەوەی هەر کاتێکی پێشوو
+
+            timer = setInterval(() => {
+                کات_ماوە--;
+                کات_نیشاندەر.textContent = `${کات_ماوە} چرکە ماوە`;
+                if (کات_ماوە <= 0) {
+                    clearInterval(timer);
+                    پرسیاری_داهاتوو();
+                }
+            }, 1000);
+        }
+
+        function پیشاندانی_پرسیار() {
+            const خانەی_پرسیار = document.getElementById('question');
+            const خانەی_بژاردەکان = document.getElementById('options');
+            const خانەی_پێشکەوتن = document.getElementById('progress');
+
+            خانەی_پرسیار.classList.add('fade-out');
+
+            setTimeout(() => {
+                خانەی_پرسیار.textContent = پرسیارە_هەڵبژێردراوەکان[پرسیاری_ئێستا].question;
+                خانەی_پێشکەوتن.textContent = `پرسیار ${پرسیاری_ئێستا + 1} لە ${پرسیارە_هەڵبژێردراوەکان.length}`;
+                خانەی_بژاردەکان.innerHTML = '';
+
+                پرسیارە_هەڵبژێردراوەکان[پرسیاری_ئێستا].options.forEach((option, index) => {
+                    const li = document.createElement('li');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'option';
+                    input.value = index;
+                    input.id = `option${index}`;
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `option${index}`;
+                    label.textContent = option;
+
+                    li.appendChild(input);
+                    li.appendChild(label);
+                    خانەی_بژاردەکان.appendChild(li);
+                });
+
+                خانەی_پرسیار.classList.remove('fade-out');
+            }, 500);
+        }
+
+        function پرسیاری_داهاتوو() {
+            clearInterval(timer);
+            const بژاردەی_هەڵبژێردراو = document.querySelector('input[name="option"]:checked');
+
+            if (بژاردەی_هەڵبژێردراو && parseInt(بژاردەی_هەڵبژێردراو.value) === پرسیارە_هەڵبژێردراوەکان[پرسیاری_ئێستا].answer) {
+                خاڵ += خاڵ_بۆ_هەر_پرسیارێک;
+            }
+
+            پرسیاری_ئێستا++;
+
+            if (پرسیاری_ئێستا < پرسیارە_هەڵبژێردراوەکان.length) {
+                پیشاندانی_پرسیار();
+                دەستپێکردنی_کات();
+            } else {
+                پیشاندانی_ئەنجام();
+            }
+        }
+
+        function پیشاندانی_ئەنجام() {
+            const بەشی_ئەزموون = document.getElementById('quiz');
+            const بەشی_ئەنجام = document.getElementById('result');
+            const خانەی_ئەنجام = document.getElementById('score');
+
+            بەشی_ئەزموون.classList.add('fade-out');
+
+            setTimeout(() => {
+                بەشی_ئەزموون.style.display = 'none';
+                بەشی_ئەنجام.style.display = 'block';
+                بەشی_ئەنجام.classList.add('fade-in');
+                خانەی_ئەنجام.textContent = `تۆ ${Math.round(خاڵ)} خاڵ لە 100 خاڵ بەدەستهێنا.`;
+            }, 300);
+        }
+
+        function دووبارە_ئەزموون() {
+            const بەشی_ئەنجام = document.getElementById('result');
+            const بەشی_سەرەکی = document.getElementById('menu');
+
+            بەشی_ئەنجام.classList.add('fade-out');
+
+            setTimeout(() => {
+                بەشی_ئەنجام.style.display = 'none';
+                بەشی_ئەنجام.classList.remove('fade-out');
+
+                بەشی_سەرەکی.style.display = 'flex';
+                بەشی_سەرەکی.classList.remove('fade-out');
+                بەشی_سەرەکی.classList.add('fade-in');
+
+                // ڕێکخستنەوەی هەموو دۆخی ئەزموونەکە
+                پرسیاری_ئێستا = 0;
+                خاڵ = 0;
+                پرسیارە_هەڵبژێردراوەکان = [];
+                clearInterval(timer);
+
+                // ڕێکخستنەوەی هەموو توخمەکانی ڕووکار
+                document.getElementById('quiz').classList.remove('fade-in', 'fade-out');
+                document.getElementById('result').classList.remove('fade-in', 'fade-out');
+            }, 300);
+        }
+
+        // گوێگرتن بۆ ڕووداوەکان
+        document.getElementById('next').addEventListener('click', پرسیاری_داهاتوو);
+        document.getElementById('restart').addEventListener('click', دووبارە_ئەزموون);
+    </script>
+</body>
+</html>
